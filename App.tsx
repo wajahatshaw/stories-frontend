@@ -28,6 +28,7 @@ import CheckOut from "./src/screens/check-out-screen/check-out";
 import SignUp from "./src/screens/auth/signup/signup";
 import { Provider } from 'react-redux';
 import { store } from "./src/redux/store";
+import prevStory from "./src/screens/prev-story-screen/prevStory";
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -95,6 +96,7 @@ export default function App() {
         <Stack.Screen name="UpdatePaymentMethod" component={UpdatePaymentMethod} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="CheckOut" component={CheckOut} />
+        <Stack.Screen name="previousStory" component={prevStory} />
       </Stack.Navigator>
     </NavigationContainer>
     </Provider>

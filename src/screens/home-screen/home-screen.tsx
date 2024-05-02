@@ -7,6 +7,7 @@ import {
   BackHandler,
   Modal,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import CommonHeader from "../../components/common-header/common-header";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -18,11 +19,13 @@ import CommonButton from "../../components/common-button/common-button";
 import CommonPlayBtn from "../../components/common-play-btn/common-play-btn";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fetchNextStory, fetchStories, guestMode, saveStory } from "../../utils/api-helper";
+import { fetchNextStory, fetchPreviousStory, fetchStories, guestMode, saveStory } from "../../utils/api-helper";
 import { setStory } from "../../redux/storySlice";
 import { useDispatch , useSelector } from 'react-redux';
 import { RootState } from "../../redux/store";
 import { useTimer } from 'react-timer-hook';
+import { setPrevStory } from "../../redux/prevStorySlice";
+import { setStoryId } from "../../redux/storyIdSlice";
 
 const homeBg = require("../../assets/images/homeBg.png");
 interface Props {}
@@ -36,6 +39,7 @@ const HomeScreen: React.FC<Props> = () => {
   const currentStoryId = useSelector((state: RootState) => state.storyId.value);
   const storyData = useSelector((state: RootState) => state.story.value);
   const index = useSelector((state: RootState) => state.storyIndex.value);
+  const prevStoryId = useSelector((state: RootState) => state.prevStory.value);
   const { seconds, minutes, hours, days } = useTimer({ expiryTimestamp: new Date(2024, 4, 16) });
 
 
@@ -92,17 +96,6 @@ const stories = async ()=> {
     ActivateGuestMode();
   }, []);
 
-  // useEffect(() => {
-  //   const clearAsyncStorage = async () => {
-  //     try {
-  //       await AsyncStorage.clear();
-  //       console.log('AsyncStorage cleared successfully.');
-  //     } catch (error) {
-  //       console.error('Error clearing AsyncStorage:', error);
-  //     }
-  //   };
-  //   clearAsyncStorage();
-  // }, []);
 
   const fetchNext = async (currentStoryId: string) => {
     try {
@@ -131,8 +124,40 @@ const handleSaveNextStory = async () => {
     console.error("Error saving story:", error);
   }
 };
-  
+
+const fetchPrev = async (currentStoryId: string) => {
+  try {
+    console.log(">>><<<<<", currentStoryId);
+    const prevStoryData = await fetchPreviousStory(currentStoryId);
+    return prevStoryData;
+  } catch (error) {
+    console.error('Error fetching next story:', error);
+    throw error;
+  }
+};
+
+useEffect(() => {
+  const prevStory = async () => {
+    try {
+      const prevStoryData = await fetchPrev(currentStoryId);
+      if (prevStoryData) {
+        dispatch(setPrevStory(prevStoryData));
+      } else {
+        console.log("No more stories in pack");
+      }
+    } catch (error) {
+      console.error('Error fetching next story:', error);
+    }
+  };
+  prevStory();
+}, [currentStoryId]);
+
+const prevStoryData = useSelector((state: RootState) => state.prevStory.value);
+const handlePlayButton = () =>{
+  navigation.navigate('previousStory');
+}
   return (
+    <ScrollView>
     <SafeAreaView style={HomeScreenStyles.root}>
       <View style={HomeScreenStyles.HeaderContainer}>
         <View>
@@ -184,11 +209,16 @@ const handleSaveNextStory = async () => {
             />
           </View>
           <View style={HomeScreenStyles.playButtonView}>
-            <CommonPlayBtn
-              btnText1="Read last week`s"
-              btnText2="Quest to the..."
-              disableRightBtn
-            />
+              {prevStoryData.previousStory && (
+                <TouchableOpacity>
+                  <CommonPlayBtn
+                    onPress={handlePlayButton}
+                    btnText1="Read previous story"
+                    btnText2={prevStoryData.previousStory.storyName}
+                    disableRightBtn
+                  />
+                </TouchableOpacity>
+              )}
             <CommonPlayBtn
               btnText1="Read last week`s"
               btnText2="Quest to the..."
@@ -224,6 +254,7 @@ const handleSaveNextStory = async () => {
    
       </ImageBackground>
     </SafeAreaView>
+    </ScrollView>
   );
 };
 

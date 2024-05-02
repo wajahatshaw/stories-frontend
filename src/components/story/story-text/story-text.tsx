@@ -19,7 +19,6 @@ const StoryText = () => {
     setLoading(true);
     try {
       const nextStoryData = await fetchNextStory(currentStoryId);
-      console.log(">><<>>><<>><<",currentStoryId)
       setLoading(false);
       return nextStoryData;
     } catch (error) {
@@ -30,7 +29,6 @@ const StoryText = () => {
   };
   const [loading, setLoading] = useState(false);
   const [currentStoryId, setCurrentStoryId] = useState(storyData[0]?.storyId); 
-  console.log(">>>>>>>>>>",currentStoryId)
   dispatch(setStoryId(currentStoryId));
 
   const nextStory = async () => {
@@ -38,7 +36,6 @@ const StoryText = () => {
     try {
       
       const nextStoryData = await fetchNext(currentStoryId);
-      console.log("?????????",nextStoryData)
       if (nextStoryData) {
         dispatch(setNextStory(nextStoryData));
         setCurrentStoryId(nextStoryData.storyId); 

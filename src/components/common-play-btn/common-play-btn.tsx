@@ -10,11 +10,12 @@ interface CommonPlayBtnProps {
   btnText2?: string;
   disableLeftBtn?: Boolean;
   disableRightBtn?: Boolean;
+  onPress?: () => {}; 
 }
 
 const CommonPlayBtn: React.FC<CommonPlayBtnProps> = (Props) => {
   return (
-    <TouchableOpacity style={CommonPlayBtnStyles.buttonView}>
+    <TouchableOpacity style={CommonPlayBtnStyles.buttonView}  onPress={Props.onPress} >
       {!Props.disableLeftBtn && (
         <Image source={prevBtn} style={CommonPlayBtnStyles.icons} />
       )}

@@ -92,6 +92,16 @@ export const fetchNextStory = async (currentStoryId: string): Promise<any> => {
   }
 };
 
+export const fetchPreviousStory = async (currentStoryId: string): Promise<any> => {
+  try {
+    const response = await instance.get(`stories/previous-story/${currentStoryId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching next story:', error);
+    throw error;
+  }
+};
+
 export const saveStory = async (storyId: string) => {
   try {
     const response = await instance.post(`users/save-story/${storyId}`);

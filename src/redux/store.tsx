@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import storyReducer from './storySlice'
 import storyIndexReducer from './storyIndexSlice'
 import nextStoryReducer from './nextStorySlice'
+import prevStoryReducer from './prevStorySlice'
 import storyIdReducer from './storyIdSlice'
 import subscriptionPlanReducer from "./subscriptionPlanSlice";
 import searchReducer from './search'
@@ -14,6 +15,7 @@ export const store = configureStore({
         storyIndex: storyIndexReducer, 
         storyId: storyIdReducer, 
         nextStory: nextStoryReducer,
+        prevStory: prevStoryReducer,
         subscriptionPlan: subscriptionPlanReducer,
         search: searchReducer,
     }

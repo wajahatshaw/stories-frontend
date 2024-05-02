@@ -89,7 +89,7 @@ export const HomeScreenStyles = StyleSheet.create({
       paddingHorizontal:12,
     },
     playButtonView:{
-      marginTop:40,
+      marginTop:20,
     },
     saveText:{
       color: 'white',
